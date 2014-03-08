@@ -1,13 +1,22 @@
 #include "interface.hh"
 #include <stdint>
+#include <vector>
 
 #define MAX_ELEMS 256
-#define 
 
-class XElem
+
+//search algorithm, used in functions
+Elem* findElem(std::vector<Elem*>);
+
+class Elem 
 {
 public:
-	long d2;
+	long delta;
+};
+
+class XElem: public Elem
+{
+public:
 	
 	inline long getNext() { return candidate; };
 	
@@ -23,14 +32,10 @@ private:
 };
 
 
-class YElem
+class YElem : public Elem
 {
 public:
-	long d1;
-	XElem* getElem(long d2);
-	void applyScore(long d2, long d3);
-private:
-	std::vector<XElem*> next;
+	std::vector<XElem*> elements;
 };
 
 
@@ -41,11 +46,6 @@ public:
 	tell the element the actual delta it got
 	*/
 	void lastActualCandidate(long d3);
-
-	/**
-	Search for the element
-	*/
-	XElem* getElem(long d1, long d2);
 
 	/**
 	return 0 if not found, and add combination if more room
