@@ -1,6 +1,6 @@
 #include "elem.h"
 #include "interface.hh"
-
+#include "balancing.h"
 
 #include <algorithm>
 #include <vector>
