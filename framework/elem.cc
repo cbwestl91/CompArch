@@ -1,7 +1,6 @@
 #include "elem.hh"
 #include "interface.hh"
 #include "balancing.hh"
-#include <linux/kernel.h>
 #include <algorithm>
 #include <vector>
 
@@ -107,7 +106,7 @@ int ElemManager::getDelta(int d1, int d2)
 
 unsigned int ElemManager::findNextFetch(unsigned int address)
 {
-	printk("oh lawd\n");
+	cout << "oh lawd" << endl;
 	static int previous = 0;
 	static int delta = 0;
 
@@ -118,7 +117,7 @@ unsigned int ElemManager::findNextFetch(unsigned int address)
 		previousActualCandidate(address - previous);
 		nextFetchDelta = getDelta(delta, address - previous);	
 	}
-	printk("attempted fetch @ %i, delta: %i\n", address + nextFetchDelta, address - previous);
+	cout << "attempted fetch " << (address + nextFetchDelta) << ", delta: " << (address - previous) << endl;
 	delta = address - previous;
 	previous = address;
 	return address + nextFetchDelta;
@@ -139,7 +138,7 @@ XElem* ElemManager::addCombination(int d1, int d2)
 	
 	yE->elements.push_back(xE);//TODO: again with the push back.
 
-	printk("Added new combo: (%i, %i)\n", d1, d2);
+	cout << "Added new combo: (" << d1 << ", " <<  d2 << ")" << endl;
 	return xE;
 }
 
@@ -152,7 +151,7 @@ void prefetch_access(AccessStat stat)
 	int nextFetch =  manager->findNextFetch((int)stat.mem_addr);
 	if(!in_cache((uint64_t)nextFetch))
 	{
-		printk("fetching %i \n", nextFetch);
+
 	  	issue_prefetch((uint64_t)nextFetch);
 	} 
 }
