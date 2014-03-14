@@ -151,7 +151,7 @@ XElem* ElemManager::addCombination(int d1, int d2)
 				if (elements[i]->elements[j]->getScore() < minScore)
 				{
 					xE = elements[i]->elements[j];
-					minScore = xE;
+					minScore = xE->getScore();
 					foundNewCandidate = true;
 					saved_j = j;
 				}
@@ -162,7 +162,7 @@ XElem* ElemManager::addCombination(int d1, int d2)
 		//remove element if its score is under the threshold:
 		if (xE->getScore() < KICK_ELEM_THRESHOLD + mFetches)
 		{
-			yE->elements.erase(saved_j);
+			yE->elements.erase(yE->elements.begin() + saved_j);
 			delete xE;
 			if (yE->elements.size() == 0)
 				delete yE;		
