@@ -174,7 +174,7 @@ XElem* ElemManager::addCombination(int d1, int d2)
 	{
 		//we already know that at least one of the elements are non-existing.
 		YElem* yE = findElem(elements, d1);
-		XElem* xE = new XElem(d2);
+		XElem* xE = new XElem(d2, mFetches);
 
 		if (yE == NULL)
 		{
