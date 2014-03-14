@@ -7,31 +7,24 @@
 
 using namespace std;
 
-Elem* findElem(vector<Elem*> v, long delta)
+XElem* ElemManager::findElem(vector<XElem*> v, long delta)
 {
-	//typedef Intcontainer::iterator IntIterator;
-
-	//IntContainer i = find(vector.begin(), vector.end(), delta); // Try to find the wanted element
-
 	for(vector<Elem*>::iterator i = v.begin(); i != v.end(); ++i)
 	{
 		if(i->delta == delta)
-		{
-			return *i; // Found it
-		}
-		
+			return *i; // Found it		
 	}
-		return NULL;	// Didn't exist
+	return NULL;	// Didn't exist
+}
 
-/*	if(i != vector.end())
+YElem* ElemManager::findElem(vector<YElem*> v, long delta)
+{
+	for(vector<Elem*>::iterator i = v.begin(); i != v.end(); ++i)
 	{
-		return *i;	// We found the element
+		if(i->delta == delta)
+			return *i; // Found it		
 	}
-	else
-	{
-		return NULL;	// Didn't exist
-	}
-*/
+	return NULL;	// Didn't exist
 }
 
 void XElem::applyActualResult(int d3)
@@ -66,9 +59,9 @@ void ElemManager::previousActualCandidate(int d3)
 	YElem* yE = NULL;
 	if (mFetches % 2)
 	{
-		yE = findElem((vector<Elem*>) elements, d_odd);
+		yE = findElem(elements, d_odd);
 		if (yE != NULL) 
-			xE = findElem((vector<Elem*>) yE->elements, d_even);
+			xE = findElem(yE->elements, d_even);
 			
 		if ((yE == NULL || xE == NULL))
 		{
@@ -80,9 +73,9 @@ void ElemManager::previousActualCandidate(int d3)
 	}
 	else
 	{
-		yE = findElem((vector<Elem*>) elements, d_even);
+		yE = findElem(elements, d_even);
 		if (yE != NULL) 
-			xE = findElem((vector<Elem*>) yE->elements, d_odd);
+			xE = findElem(yE->elements, d_odd);
 			
 		if ((yE == NULL || xE == NULL))
 		{
@@ -103,8 +96,8 @@ void ElemManager::previousActualCandidate(int d3)
 
 int ElemManager::getDelta(int d1, int d2)
 {
-	YElem* yE = (YElem*) findElem((vector<Elem*>) elements, d1);
-	XElem* xE = (XElem*) findElem((vector<Elem*>) yE->elements, d2);
+	YElem* yE = (YElem*) findElem(elements, d1);
+	XElem* xE = (XElem*) findElem(yE->elements, d2);
 	
 	if (xE != NULL)
 		return xE->getNext();
@@ -133,7 +126,7 @@ unsigned int ElemManager::findNextFetch(unsigned int address)
 XElem* ElemManager::addCombination(int d1, int d2)
 {
 	//we already know that at least one of the elements are non-existing.
-	YElem* yE = findElem((vector<Elem*>) elements, d1);
+	YElem* yE = findElem(elements, d1);
 	XElem* xE = new XElem(d2);
 	
 	if (yE == NULL)

@@ -17,7 +17,6 @@ public:
 
 
 //search algorithm
-Elem* findElem(std::vector<Elem*>, int);
 
 
 class XElem: public Elem
@@ -71,6 +70,9 @@ private:
 	used by getDelta to add new combo
 	*/
 	XElem* addCombination(int d1, int d2);
+	
+	XElem* findElem(std::vector<XElem*>, int);
+	YElem* findElem(std::vector<YElem*>, int);
 
 	uint16_t elemCount;
 	std::vector<YElem*> elements;
