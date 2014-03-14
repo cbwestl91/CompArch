@@ -1,4 +1,5 @@
 #include "interface.hh"
+#include "elem.h"
 
 ElemManager Manager;
 
