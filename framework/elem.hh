@@ -25,16 +25,18 @@ public:
 	
 	inline int getNext() { return candidate; };
 	
-	XElem(int delta) 
+	XElem(int delta, unsigned int totalFetches) 
 	{ 
 		this->delta = delta; 
 		candidate = 0;
-		score = 0;
+		score = totalFetches + START_SCORE;
 	}
 	/**
 	* apply actual result, and update score. Change candidate if score == 0
 	*/
-	void applyActualResult(int d3);
+	void applyActualResult(int d3, unsigned int totalFetches);
+	
+	uint8_t getScore() { return score; }
 private:
 	int candidate;
 	uint8_t score;
@@ -44,7 +46,10 @@ private:
 class YElem : public Elem
 {
 public:
-	YElem(int d) { delta = d; }
+	YElem(int d) 
+	{ 
+		delta = d; 
+	}
 	std::vector<XElem*> elements;
 };
 
@@ -65,6 +70,8 @@ public:
 	ElemManager();
 	
 	unsigned int findNextFetch(unsigned int address);
+	
+
 	
 private:
 	/**

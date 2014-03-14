@@ -27,19 +27,25 @@ YElem* ElemManager::findElem(vector<YElem*> v, int delta)
 	return NULL;	// Didn't exist
 }
 
-void XElem::applyActualResult(int d3)
+void XElem::applyActualResult(int d3, unsigned int totalFetches)
 {
 	if (d3 == 0)//ignore prefetch
 		return;
 	else if (candidate == d3)
-		score += HIT_SCORE_BOOST;
+	{
+		if (score < totalFetches + START_SCORE)
+			score = totalFetches + START_SCORE;
+		else
+			score += HIT_SCORE_BOOST;
+		
+	}
 	else
 	{
 		//change candidate:
-		if (score <= KICK_THRESHOLD)
+		if (score <= KICK_THRESHOLD + totalFetches)
 		{
 			candidate = d3;
-			score = START_SCORE;
+			score = START_SCORE + totalFetches;
 		}
 		else
 			score -= MISS_SCORE_PUNISHMENT;
@@ -89,7 +95,7 @@ void ElemManager::previousActualCandidate(int d3)
 
 	//check if we hit the candidate:
 	if (xE != NULL)
-		xE->applyActualResult(d3);
+		xE->applyActualResult(d3, mFetches);
 
 	mFetches++;
 }
@@ -110,7 +116,6 @@ int ElemManager::getDelta(int d1, int d2)
 
 unsigned int ElemManager::findNextFetch(unsigned int address)
 {
-	cout << "oh lawd" << endl;
 	static int previous = 0;
 	static int delta = 0;
 
@@ -121,7 +126,10 @@ unsigned int ElemManager::findNextFetch(unsigned int address)
 		previousActualCandidate(address - previous);
 		nextFetchDelta = getDelta(delta, address - previous);	
 	}
-	cout << "attempted fetch " << (address + nextFetchDelta) << ", delta: " << nextFetchDelta << endl;
+	if (nextFetchDelta)
+		cout << "attempted fetch " << (address + nextFetchDelta) << ", delta: " << nextFetchDelta << endl;
+	if (mFetches % 1000)
+		cout << "------------------------------------------" << mFetches << "------------------------------------" << endl;
 	delta = address - previous;
 	previous = address;
 	return address + nextFetchDelta;
@@ -129,21 +137,59 @@ unsigned int ElemManager::findNextFetch(unsigned int address)
 
 XElem* ElemManager::addCombination(int d1, int d2)
 {
-	//we already know that at least one of the elements are non-existing.
-	YElem* yE = findElem(elements, d1);
-	XElem* xE = new XElem(d2);
-	
-	if (yE == NULL)
+	if (elemCount >= MAX_ELEMS)
 	{
-		yE = new YElem(d1);
-
-		elements.push_back(yE);//TODO: dont push back, insert at correct position.
+		YElem* yE = NULL;
+		XElem* xE = NULL;
+		int minScore = 100000;
+		int saved_j = 0;
+		for (int i = 0; i < elements.size(); i++)
+		{
+			bool foundNewCandidate = false;
+			for (int j = 0; j < elements[i]->elements.size(); j++)
+			{
+				if (elements[i]->elements[j]->getScore() < minScore)
+				{
+					xE = elements[i]->elements[j];
+					minScore = xE;
+					foundNewCandidate = true;
+					saved_j = j;
+				}
+			}
+			if (foundNewCandidate)
+				yE = elements[i];
+		}	
+		//remove element if its score is under the threshold:
+		if (xE->getScore() < KICK_ELEM_THRESHOLD + mFetches)
+		{
+			yE->elements.erase(saved_j);
+			delete xE;
+			if (yE->elements.size() == 0)
+				delete yE;		
+			elemCount--;
+		}
 	}
-	
-	yE->elements.push_back(xE);//TODO: again with the push back.
+	//need to recheck the elem count
+	if (elemCount < MAX_ELEMS)
+	{
+		//we already know that at least one of the elements are non-existing.
+		YElem* yE = findElem(elements, d1);
+		XElem* xE = new XElem(d2);
 
-	cout << "Added new combo: (" << d1 << ", " <<  d2 << ")" << endl;
-	return xE;
+		if (yE == NULL)
+		{
+			yE = new YElem(d1);
+
+			elements.push_back(yE);//TODO: dont push back, insert at correct position.
+		}
+
+		yE->elements.push_back(xE);//TODO: again with the push back.
+
+		elemCount++;
+
+		return xE;
+	}
+	return NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -166,6 +212,5 @@ void prefetch_complete(Addr addr)
 
 void prefetch_init(void)
 {
-	cout << "init" << endl;
 	manager = new ElemManager();
 }
