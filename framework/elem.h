@@ -5,14 +5,17 @@
 #define MAX_ELEMS 256
 
 
-//search algorithm, used in functions
-Elem* findElem(std::vector<Elem*>);
 
 class Elem 
 {
 public:
 	long delta;
 };
+
+
+//search algorithm
+Elem* findElem(std::vector<Elem*>);
+
 
 class XElem: public Elem
 {
@@ -22,7 +25,7 @@ public:
 	
 
 	/**
-	apply actual result, and update score. Change candidate if score == 0
+	* apply actual result, and update score. Change candidate if score == 0
 	*/
 	void applyActualResult(long d3);
 private:
@@ -45,7 +48,7 @@ public:
 	/**
 	tell the element the actual delta it got
 	*/
-	void lastActualCandidate(long d3);
+	void previousActualCandidate(long d3);
 
 	/**
 	return 0 if not found, and add combination if more room
