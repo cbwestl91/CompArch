@@ -1,5 +1,5 @@
 #include "interface.hh"
-#include "elem.h"
+#include "elem.hh"
 
 ElemManager* manager;
 
