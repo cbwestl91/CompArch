@@ -2,10 +2,6 @@
 
 ElemManager Manager;
 
-void prefetch_init(void)
-{
-}
-
 void prefetch_access(AccessStat stat)
 {
   int nextFetch =  Manager.findNextFetch((int)stat.mem_add);
@@ -15,8 +11,10 @@ void prefetch_access(AccessStat stat)
     } 
 }
 
-void prefetch_complete(Addr addr) {
-    /*
-     * Called when a block requested by the prefetcher has been loaded.
-     */
+void prefetch_complete(Addr addr)
+{
+}
+
+void prefetch_init(void)
+{
 }
