@@ -186,7 +186,7 @@ XElem* ElemManager::addCombination(int d1, int d2)
 		yE->elements.push_back(xE);//TODO: again with the push back.
 
 		elemCount++;
-
+		cout << "new combo: " << d1 << ", " << d2 << endl;
 		return xE;
 	}
 	return NULL;
