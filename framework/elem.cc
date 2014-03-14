@@ -1,6 +1,6 @@
-#include "elem.h"
+#include "elem.hh"
 #include "interface.hh"
-#include "balancing.h"
+#include "balancing.hh"
 
 #include <algorithm>
 #include <vector>
@@ -64,7 +64,6 @@ void ElemManager::previousActualCandidate(int d3)
 	static int d_odd = 0, d_even = 0;
 	XElem* xE = NULL;
 	YElem* yE = NULL;
-	bool notFound = false;
 	if (mFetches % 2)
 	{
 		yE = findElem((vector<Elem*>) elements, d_odd);

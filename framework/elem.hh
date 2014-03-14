@@ -2,7 +2,7 @@
 
 #pragma once
 #include "interface.hh"
-
+#include <stdint.h>
 #include <vector>
 
 #define MAX_ELEMS 256
@@ -70,7 +70,7 @@ private:
 	/**
 	used by getDelta to add new combo
 	*/
-	void addCombination(int d1, int d2);
+	XElem* addCombination(int d1, int d2);
 
 	uint16_t elemCount;
 	std::vector<YElem*> elements;
