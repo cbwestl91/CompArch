@@ -64,6 +64,8 @@ public:
 	
 	ElemManager();
 	
+	unsigned int findNextFetch(unsigned int address);
+	
 private:
 	/**
 	used by getDelta to add new combo
