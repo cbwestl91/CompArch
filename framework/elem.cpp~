@@ -17,11 +17,11 @@ Elem* findElem(vector<Elem*>, long delta)
 	{
 		if(Elem[i] == delta)
 		{
-			return *i; // Found it
+			return *i;
 		}
 		else
 		{
-			return NULL;	// Didn't exist
+		return NULL;	// Didn't exist
 		}
 	}
 
