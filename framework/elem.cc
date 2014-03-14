@@ -96,8 +96,11 @@ void ElemManager::previousActualCandidate(int d3)
 
 int ElemManager::getDelta(int d1, int d2)
 {
-	YElem* yE = (YElem*) findElem(elements, d1);
-	XElem* xE = (XElem*) findElem(yE->elements, d2);
+	XElem* xE = NULL;
+	YElem* yE = findElem(elements, d1);
+	
+	if (yE != NULL)
+		xE = findElem(yE->elements, d2);
 	
 	if (xE != NULL)
 		return xE->getNext();
@@ -118,7 +121,7 @@ unsigned int ElemManager::findNextFetch(unsigned int address)
 		previousActualCandidate(address - previous);
 		nextFetchDelta = getDelta(delta, address - previous);	
 	}
-	cout << "attempted fetch " << (address + nextFetchDelta) << ", delta: " << (address - previous) << endl;
+	cout << "attempted fetch " << (address + nextFetchDelta) << ", delta: " << nextFetchDelta << endl;
 	delta = address - previous;
 	previous = address;
 	return address + nextFetchDelta;
