@@ -44,6 +44,7 @@ private:
 class YElem : public Elem
 {
 public:
+	YElem(int d) { delta = d; }
 	std::vector<XElem*> elements;
 };
 
