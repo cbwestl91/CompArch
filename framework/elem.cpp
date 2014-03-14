@@ -1,16 +1,17 @@
 #include "elem.h"
 #include "interface.hh"
 
+
 #include <algorithm>
 #include <vector>
 
 using namespace std;
 
-Elem* findElem(std::vector<Elem*>)
+Elem* findElem(std::vector<Elem*>, long delta)
 {
 	typedef Intcontainer::iterator IntIterator;
 
-	IntContainer i = find(vector.begin(), vector.end(), Elem*); // Try to find the wanted element
+	IntContainer i = binary_search(vector.begin(), vector.end(), delta); // Try to find the wanted element
 
 	if(i != vector.end())
 	{
