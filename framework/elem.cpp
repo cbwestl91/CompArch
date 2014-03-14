@@ -7,23 +7,21 @@
 
 using namespace std;
 
-Elem* findElem(vector<Elem*>, long delta)
+Elem* findElem(vector<Elem*> v, long delta)
 {
 	//typedef Intcontainer::iterator IntIterator;
 
 	//IntContainer i = find(vector.begin(), vector.end(), delta); // Try to find the wanted element
 
-	for(vector<Elem*>::iterator i = vector.begin(); i != vector.end(); ++i)
+	for(v::iterator i = v.begin(); i != v.end(); ++i)
 	{
-		if(Elem[i] == delta)
+		if(i->delta == delta)
 		{
 			return *i; // Found it
 		}
-		else
-		{
-			return NULL;	// Didn't exist
-		}
+		
 	}
+		return NULL;	// Didn't exist
 
 /*	if(i != vector.end())
 	{
