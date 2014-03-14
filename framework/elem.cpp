@@ -39,7 +39,7 @@ ElemManager::ElemManager()
 
 void ElemManager::previousActualCandidate(int d3)
 {
-	static long d_odd = 0, d_even = 0;
+	static int d_odd = 0, d_even = 0;
 	XElem* xE = NULL;
 	YElem* yE = NULL;
 	bool notFound = false;
