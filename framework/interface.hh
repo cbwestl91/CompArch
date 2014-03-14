@@ -1,6 +1,7 @@
 /* C interface for prefetchers. */
 /* DO NOT MODIFY THIS FILE */
 
+#pragma once
 #include <stdint.h>
 
 /*

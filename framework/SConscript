@@ -3,4 +3,4 @@
 # This tells SCons where to find the prefetcher file.
 
 Import('*')
-Source('prefetcher.cc')
+Source('prefetcher.cc', 'elem.cpp')
