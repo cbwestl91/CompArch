@@ -13,7 +13,7 @@ Elem* findElem(vector<Elem*> v, long delta)
 
 	//IntContainer i = find(vector.begin(), vector.end(), delta); // Try to find the wanted element
 
-	for(v::iterator i = v.begin(); i != v.end(); ++i)
+	for(vector<Elem*>::iterator i = v.begin(); i != v.end(); ++i)
 	{
 		if(i->delta == delta)
 		{
