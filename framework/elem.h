@@ -1,3 +1,4 @@
+#pragma once
 #include "interface.hh"
 #include <stdint>
 #include <vector>
