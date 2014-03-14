@@ -2,6 +2,7 @@
 #include "interface.hh"
 #include "balancing.hh"
 #include <algorithm>
+#include <stdio.h>
 #include <vector>
 
 using namespace std;
@@ -162,6 +163,6 @@ void prefetch_complete(Addr addr)
 
 void prefetch_init(void)
 {
-	printk ("init");
+	cout << "init" << endl;
 	manager = new ElemManager();
 }
