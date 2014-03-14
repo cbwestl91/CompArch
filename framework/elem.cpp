@@ -26,10 +26,20 @@ Elem* findElem(std::vector<Elem*>)
 
 void XElem::applyActualResult(int d3)
 {
-
+	if (candidate == d3)
+		score += HIT_SCORE_BOOST;
+	else
+	{
+		//change candidate:
+		if (score <= KICK_THRESHOLD)
+		{
+			candidate = d3;
+			score = START_SCORE;
+		}
+		else
+			score -= MISS_SCORE_PUNISHMENT;
+	}		
 }
-
-
 
 
 ElemManager::ElemManager()
@@ -78,13 +88,23 @@ void ElemManager::previousActualCandidate(int d3)
 
 int ElemManager::getDelta(int d1, int d2)
 {
-	YElem* yE = findElem(elements, d1);
-	XElem* xE = findElem(yE->elements, d2);
+	YElem* yE = (YElem*) findElem(elements, d1);
+	XElem* xE = (XElem*) findElem(yE->elements, d2);
 	
-	return return xE->getNext();
+	return xE->getNext();
 }
 
 void ElemManager::addCombination(int d1, int d2)
 {
+	//we already know that at least one of the elements are non-existing.
+	YElem* yE = findElem(elements, d1);
+	XElem* xE = new XElem(d2);
 	
+	if (yE == NULL)
+	{
+		yE = new YElem();
+		elements.push_back(yE);//TODO: dont push back, insert at correct position.
+	}
+	
+	yE->elements.push_back(xE);//TODO: again with the push back.
 }

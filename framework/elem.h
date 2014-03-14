@@ -24,7 +24,12 @@ public:
 	
 	inline int getNext() { return candidate; };
 	
-
+	XElem(int delta) 
+	{ 
+		this->delta = delta; 
+		candidate = 0;
+		score = 0;
+	}
 	/**
 	* apply actual result, and update score. Change candidate if score == 0
 	*/
