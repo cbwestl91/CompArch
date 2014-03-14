@@ -7,21 +7,21 @@
 
 using namespace std;
 
-XElem* ElemManager::findElem(vector<XElem*> v, long delta)
+XElem* ElemManager::findElem(vector<XElem*> v, int delta)
 {
-	for(vector<Elem*>::iterator i = v.begin(); i != v.end(); ++i)
+	for(vector<XElem*>::iterator i = v.begin(); i != v.end(); ++i)
 	{
-		if(i->delta == delta)
+		if((*i)->delta == delta)
 			return *i; // Found it		
 	}
 	return NULL;	// Didn't exist
 }
 
-YElem* ElemManager::findElem(vector<YElem*> v, long delta)
+YElem* ElemManager::findElem(vector<YElem*> v, int delta)
 {
-	for(vector<Elem*>::iterator i = v.begin(); i != v.end(); ++i)
+	for(vector<YElem*>::iterator i = v.begin(); i != v.end(); ++i)
 	{
-		if(i->delta == delta)
+		if((*i)->delta == delta)
 			return *i; // Found it		
 	}
 	return NULL;	// Didn't exist
