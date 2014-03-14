@@ -25,22 +25,67 @@ Elem* findElem(std::vector<Elem*>, long delta)
 	return NULL;
 }
 
-void XElem::applyActualResult(long d3)
+void XElem::applyActualResult(int d3)
 {
 
 }
 
-void ElemManager::previousActualCandidate(long d3)
-{
 
+
+
+ElemManager::ElemManager()
+{
+	mFetches = 0;
 }
 
-long ElemManager::getDelta(long d1, long d2)
+void ElemManager::previousActualCandidate(int d3)
 {
-	return 0L;
+	static long d_odd = 0, d_even = 0;
+	XElem* xE = NULL;
+	YElem* yE = NULL;
+	bool notFound = false;
+	if (mFetches % 2)
+	{
+		yE = findElem(elements, d_odd);
+		if (yE != NULL) 
+			xE = findElem(yE->elements, d_even);
+			
+		if ((yE == NULL || xE == NULL) && d_odd != 0 && d_even != 0)
+			addCombination(d_odd, d_even);
+		else
+			d_odd = d3;
+	}
+	else
+	{
+		yE = findElem(elements, d_even);
+		if (yE != NULL) 
+			xE = findElem(yE->elements, d_odd);
+			
+		if ((yE == NULL || xE == NULL))
+		{
+			if (d_odd != 0 && d_even != 0)
+				addCombination(d_even, d_odd);
+		}
+		else
+			d_even = d3;
+	}
+	
+
+	//check if we hit the candidate:
+	xE->applyActualResult(d3);
+
+	mFetches++;
 }
 
-void ElemManager::addCombination(long d1, long d2)
+int ElemManager::getDelta(int d1, int d2)
 {
+	YElem* yE = findElem(elements, d1);
+	XElem* xE = findElem(yE->elements, d2);
+	
+	return return xE->getNext();
+}
 
+void ElemManager::addCombination(int d1, int d2)
+{
+	
 }
