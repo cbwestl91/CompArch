@@ -24,7 +24,6 @@ YElem* ElemManager::findElem(vector<YElem*> v, int delta)
 		if((*i)->delta == delta)
 			return *i; // Found it		
 	}
-	
 	return NULL;	// Didn't exist
 }
 
@@ -36,7 +35,7 @@ void XElem::applyActualResult(int d3, unsigned int totalFetches)
 	{
 		if (score < totalFetches + START_SCORE)
 			score = totalFetches + START_SCORE;
-		else 
+		else
 			score += HIT_SCORE_BOOST;
 		
 	}
@@ -127,11 +126,10 @@ unsigned int ElemManager::findNextFetch(unsigned int address)
 		previousActualCandidate(address - previous);
 		nextFetchDelta = getDelta(delta, address - previous);	
 	}
-	//if (nextFetchDelta)
-	//	cout << "attempted fetch " << (address + nextFetchDelta) << ", delta: " << nextFetchDelta << endl;
+	if (nextFetchDelta)
+		cout << "attempted fetch " << (address + nextFetchDelta) << ", delta: " << nextFetchDelta << endl;
 	delta = address - previous;
 	previous = address;
-			
 	return address + nextFetchDelta;
 }
 
@@ -142,35 +140,33 @@ XElem* ElemManager::addCombination(int d1, int d2)
 		YElem* yE = NULL;
 		XElem* xE = NULL;
 		int minScore = 100000;
-		int saved_j = 0, saved_i = 0;;
+		int saved_j = 0;
 		for (int i = 0; i < elements.size(); i++)
 		{
+			bool foundNewCandidate = false;
 			for (int j = 0; j < elements[i]->elements.size(); j++)
 			{
 				if (elements[i]->elements[j]->getScore() < minScore)
 				{
 					xE = elements[i]->elements[j];
 					minScore = xE->getScore();
+					foundNewCandidate = true;
 					yE = elements[i];
-					saved_i = i;
 					saved_j = j;
 				}
 			}
+			if (foundNewCandidate)
+				yE = elements[i];
 		}	
-		if (xE != NULL && yE != NULL)
+		//remove element if its score is under the threshold:
+		if (xE->getScore() < KICK_ELEM_THRESHOLD + mFetches)
 		{
-			yE->elements.erase(yE->elements.begin() + saved_j);//remove xE from list
+			yE->elements.erase(yE->elements.begin() + saved_j);
 			delete xE;
-			
 			if (yE->elements.size() == 0)
-			{
-				elements.erase(elements.begin() + saved_i);
-				delete yE;
-			}
+				delete yE;		
 			elemCount--;
 		}
-				
-				
 	}
 	//need to recheck the elem count
 	if (elemCount < MAX_ELEMS)
@@ -182,13 +178,14 @@ XElem* ElemManager::addCombination(int d1, int d2)
 		if (yE == NULL)
 		{
 			yE = new YElem(d1);
+
 			elements.push_back(yE);//TODO: dont push back, insert at correct position.
 		}
 
 		yE->elements.push_back(xE);//TODO: again with the push back.
 
 		elemCount++;
-		//cout << "new combo: " << d1 << ", " << d2 << endl;
+		cout << "new combo: " << d1 << ", " << d2 << endl;
 		return xE;
 	}
 	return NULL;
@@ -201,17 +198,11 @@ ElemManager* manager;
 void prefetch_access(AccessStat stat)
 {
 	int nextFetch =  manager->findNextFetch((int)stat.mem_addr);
-	
-	if (stat.miss)
-		cout << "miss: " << stat.mem_addr << endl;
-	else
-		cout << "hit:  " << stat.mem_addr << endl;
-	
-	if(nextFetch < MAX_PHYS_MEM_ADDR && !in_cache((uint64_t)nextFetch) && nextFetch != stat.mem_addr)
+	if(!in_cache((uint64_t)nextFetch))
 	{
-		cout << "Fetch: " << nextFetch << endl;
+
 	  	issue_prefetch((uint64_t)nextFetch);
-  	}
+	} 
 }
 
 void prefetch_complete(Addr addr)
