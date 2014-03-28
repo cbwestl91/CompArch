@@ -1,1 +1,7 @@
 \section*{Prefetcher Description}
+
+The prefetcher has a pattern-seeking behaviour. It uses vectors to log observed fetch sequences, and ranks them based on how often the fetches correspond with the sequence. 
+
+
+The access sequences that occur the least frequent are more prone to being removed in the favour of new sequences.
+
