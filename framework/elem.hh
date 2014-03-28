@@ -4,7 +4,7 @@
 #include "interface.hh"
 #include "balancing.hh"
 #include <stdint.h>
-#include <vector>
+#include <deque>
 
 
 
@@ -51,7 +51,7 @@ public:
 	{ 
 		delta = d; 
 	}
-	std::vector<XElem*> elements;
+	std::deque<XElem*> elements;
 };
 
 
@@ -74,18 +74,20 @@ public:
 	
 
 	
-private:
 	/**
 	used by getDelta to add new combo
 	*/
 	XElem* addCombination(int d1, int d2);
 	
-	XElem* findElem(std::vector<XElem*>, int);
-	YElem* findElem(std::vector<YElem*>, int);
+	int findElem(std::deque<XElem*>, int);
+	int findElem(std::deque<YElem*>, int);
 
+	XElem* findPtr(std::deque<XElem*> v, int delta);
+	YElem* findPtr(std::deque<YElem*> v, int delta);
 	uint16_t elemCount;
-	std::vector<YElem*> elements;
+	std::deque<YElem*> elements;
 
+private:
 	unsigned int mFetches;
 };
 
