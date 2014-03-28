@@ -4,7 +4,6 @@
 %%% Style packages %%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[utf8]{inputenc}
-\usepackage[norsk]{babel}
 \setlength{\parindent}{0pt} 
 \setlength{\parskip}{2ex}
 \usepackage{a4wide}
@@ -40,7 +39,7 @@
 %%% Titlepage %%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \author{Trond Snekvik\\ trondesn@stud.ntnu.no\\\\ Kaj Andreas Palm \\kajpalm@gmail.com\\\\Christopher Benjamin Westlye\\ chriwes@stud.ntnu.no\and Raymond Selvik\\ raymondd@stud.ntnu.no}
-\title{\MakeUppercase{\bf Prosjektrapport} \\ \Large{Datamaskinarkitektur TDT4160ishsomething}}
+\title{\MakeUppercase{\bf Prosjektrapport} \\ \Large{Datamaskinarkitektur TDT4260}}
 \date{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -53,12 +52,30 @@
 %\end{abstract}
 
 \tableofcontents
-\pagestyle{plain} %Normal chapter numbering.
-%\chapter{}
-%\section{}
-%\input{.tex}
-%\input{.tex}
-\newpage
-%\section{}
-%\input{.tex}
+\pagestyle{plain} %Normal chapter numbering
+
+\clearpage
+\input{abstract.tex}
+
+\clearpage
+\input{introduction.tex}
+
+\clearpage
+\input{background.tex}
+
+\clearpage
+\input{prefetcherDescription.tex}
+
+\clearpage
+\input{methodology.tex}
+
+\clearpage
+\input{results.tex}
+
+\clearpage
+\input{discussion.tex}
+
+\clearpage
+\input{conclusion.tex}
+
 \end{document}
