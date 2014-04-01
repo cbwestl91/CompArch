@@ -1,7 +1,4 @@
-\section*{Prefetcher Description}
-
-The prefetcher has a pattern-seeking behaviour. It uses vectors to log observed fetch sequences, and ranks them based on how often the fetches correspond with the sequence. 
+The prefetcher has a pattern-seeking behaviour. It uses vectors to log observed fetch sequences, and ranks them based on how often the actual fetches correspond with the stored sequence. This is achieved by logging combinations of three requests, thus making a link between two fetches and what we expect to be referenced after these. Every time the two requests are recognized, the third one is prefetched. If this is correct behaviour, the score of that particular sequence is raised. The next fetch is then always assumed to be the third fetch in the sequence that has been correct the most times.
 
 
-The access sequences that occur the least frequent are more prone to being removed in the favour of new sequences.
-
+The access sequences that occur the least frequent are more prone to being removed in favour of new sequences. This is done by continually raising a threshold. Sequences that are recognized and proven to be correct have their value increased. If entries fall under the threshold, 

@@ -1,31 +1,210 @@
 #include "elem.hh"
 #include "interface.hh"
 #include "balancing.hh"
+#include <limits>
 #include <algorithm>
 #include <stdio.h>
 #include <vector>
+#include <deque>
 
 using namespace std;
+#define OPTIMIZE 0
 
-XElem* ElemManager::findElem(vector<XElem*> v, int delta)
+bool insert(deque<XElem*> vec, XElem* n)
 {
-	for(vector<XElem*>::iterator i = v.begin(); i != v.end(); ++i)
-	{
-		if((*i)->delta == delta)
-			return *i; // Found it		
-	}
-	return NULL;	// Didn't exist
+	//cout << "insert " << n->delta << endl;
+    int max = vec.size() - 1;
+    int min = 0;
+    int mid = max / 2;
+    while(min <= max)
+    {
+        mid = min + (max - min) / 2;
+        
+        if (n->delta > vec[mid]->delta)
+        {
+            min = mid + 1;
+        }
+        else
+        {
+            max = mid - 1;
+        }
+    }
+    
+    if (vec.size() == 0)
+    {
+//    	cout << "started X" << endl;
+        vec.push_back(n);
+        return true;
+    }
+    else if (mid < vec.size() && mid >= 0 && vec[mid]->delta == n->delta)
+    {    	
+    	return false;
+    }
+    else if (vec[vec.size() - 1]->delta < n->delta)
+    {
+    	vec.push_back(n);
+    	return true;
+    }
+    else if (vec[0]->delta > n->delta)
+    {
+        vec.push_front(n);
+        return true;
+    }
+    else if (vec[mid]->delta > n->delta)
+    {
+//    	cout << "insert" << endl;
+        vec.insert(vec.begin() + mid, n);
+        return true;
+    }
+    else
+    {
+//    	cout << "retarded insert" << endl;
+        vec.insert(vec.begin() + mid + 1, n);
+        return true;
+    }
+        
 }
 
-YElem* ElemManager::findElem(vector<YElem*> v, int delta)
+
+bool insert(deque<YElem*> vec, YElem* n)
 {
-	for(vector<YElem*>::iterator i = v.begin(); i != v.end(); ++i)
+	//cout << "insert " << n->delta << endl;
+    int max = vec.size() - 1;
+    int min = 0;
+    int mid = max / 2;
+    while(min <= max)
+    {
+        mid = min + (max - min) / 2;
+        
+        if (n->delta > vec[mid]->delta)
+        {
+            min = mid + 1;
+        }
+        else
+        {
+            max = mid - 1;
+        }
+    }
+    
+    if (vec.size() == 0)
+    {
+    	//cout << "started Y" << endl;
+        vec.push_back(n);
+        return true;
+    }
+    else if (mid < vec.size() && mid >= 0 && vec[mid]->delta == n->delta)
+    {    	
+    	return false;
+    }
+    else if (vec[vec.size() - 1]->delta < n->delta)
+    {
+    	vec.push_back(n);
+    	return true;
+    }
+    else if (vec[0]->delta > n->delta)
+    {
+        vec.push_front(n);
+        return true;
+    }
+    else if (vec[mid]->delta > n->delta)
+    {
+    	//cout << "insert" << endl;
+        vec.insert(vec.begin() + mid, n);
+        return true;
+    }
+    else
+    {
+    	//cout << "retarded insert" << endl;
+        vec.insert(vec.begin() + mid + 1, n);
+        return true;
+    }
+        
+}
+
+
+
+int ElemManager::findElem(deque<XElem*> v, int delta)
+{
+#if OPTIMIZE
+
+	int mid = 0, min = 0, max = v.size() - 1;
+ 	while (max >= min)
 	{
-		if((*i)->delta == delta)
-			return *i; // Found it		
+		mid = min + (max - min) / 2;
+		if(v[mid]->delta == delta)
+			return mid; 
+		else if (v[mid]->delta < delta)
+			min = mid + 1;
+		else         
+			max = mid - 1;
 	}
+	if(min > max)
+	  {
+	    return min;
+	  }
+  	return mid;
+#else
+	for(int i = 0; i < v.size(); i++)
+	{
+		if(v[i]->delta == delta)
+			return i; // Found it		
+	}
+	return 0;	// Didn't exist
 	
-	return NULL;	// Didn't exist
+#endif
+}
+
+int ElemManager::findElem(deque<YElem*> v, int delta)
+{
+
+#if OPTIMIZE
+
+	int mid = 0, min = 0, max = v.size() - 1;
+ 	while (max >= min)
+	{
+		mid = min + (max - min) / 2;
+		if(v[mid]->delta == delta)
+			return mid; 
+		else if (v[mid]->delta < delta)
+			min = mid + 1;
+		else         
+			max = mid - 1;
+	}
+
+	if(min > max)
+	  {
+	    return min;
+	  }
+
+  	return mid;
+#else
+
+	for(int i = 0; i < v.size(); i++)
+	{
+		if(v[i]->delta == delta)
+			return i; // Found it		
+	}
+	return 0;	// Didn't exist
+
+#endif
+}
+
+XElem* ElemManager::findPtr(deque<XElem*> v, int delta)
+{
+	int pos = findElem(v, delta);
+	if (pos < v.size() && pos > 0)
+		return v[pos];
+	else 
+		return NULL;
+}
+
+YElem* ElemManager::findPtr(deque<YElem*> v, int delta)
+{
+	int pos = findElem(v, delta);
+	if (pos < v.size() && pos > 0)
+		return v[pos];
+	else 
+		return NULL;
 }
 
 void XElem::applyActualResult(int d3, unsigned int totalFetches)
@@ -57,6 +236,7 @@ void XElem::applyActualResult(int d3, unsigned int totalFetches)
 ElemManager::ElemManager()
 {
 	mFetches = 0;
+	elemCount = 0;
 }
 
 void ElemManager::previousActualCandidate(int d3)
@@ -66,9 +246,9 @@ void ElemManager::previousActualCandidate(int d3)
 	YElem* yE = NULL;
 	if (mFetches % 2)
 	{
-		yE = findElem(elements, d_odd);
+		yE = findPtr(elements, d_odd);
 		if (yE != NULL) 
-			xE = findElem(yE->elements, d_even);
+			xE = findPtr(yE->elements, d_even);
 			
 		if ((yE == NULL || xE == NULL))
 		{
@@ -80,9 +260,9 @@ void ElemManager::previousActualCandidate(int d3)
 	}
 	else
 	{
-		yE = findElem(elements, d_even);
+		yE = findPtr(elements, d_even);
 		if (yE != NULL) 
-			xE = findElem(yE->elements, d_odd);
+			xE = findPtr(yE->elements, d_odd);
 			
 		if ((yE == NULL || xE == NULL))
 		{
@@ -104,10 +284,10 @@ void ElemManager::previousActualCandidate(int d3)
 int ElemManager::getDelta(int d1, int d2)
 {
 	XElem* xE = NULL;
-	YElem* yE = findElem(elements, d1);
+	YElem* yE = findPtr(elements, d1);
 	
 	if (yE != NULL)
-		xE = findElem(yE->elements, d2);
+		xE = findPtr(yE->elements, d2);
 	
 	if (xE != NULL)
 		return xE->getNext();
@@ -141,17 +321,18 @@ XElem* ElemManager::addCombination(int d1, int d2)
 	{
 		YElem* yE = NULL;
 		XElem* xE = NULL;
-		int minScore = 100000;
-		int saved_j = 0, saved_i = 0;;
+		int minScore = std::numeric_limits<int>::max();
+		int saved_j = 0, saved_i = 0;
+		
 		for (int i = 0; i < elements.size(); i++)
 		{
 			for (int j = 0; j < elements[i]->elements.size(); j++)
 			{
-				if (elements[i]->elements[j]->getScore() < minScore)
+				if (elements[i]->elements[j]->getScore() <= minScore)
 				{
 					xE = elements[i]->elements[j];
-					minScore = xE->getScore();
 					yE = elements[i];
+					minScore = xE->getScore();
 					saved_i = i;
 					saved_j = j;
 				}
@@ -169,6 +350,8 @@ XElem* ElemManager::addCombination(int d1, int d2)
 			}
 			elemCount--;
 		}
+		else
+			cout << "retarded remove" << endl;
 				
 				
 	}
@@ -176,21 +359,25 @@ XElem* ElemManager::addCombination(int d1, int d2)
 	if (elemCount < MAX_ELEMS)
 	{
 		//we already know that at least one of the elements are non-existing.
-		YElem* yE = findElem(elements, d1);
+		int find = findElem(elements, d1);
+		
+		YElem* yE = NULL;
+		if (find < elements.size() && find >= 0)
+			yE = findPtr(elements, yE->delta);
+		
 		XElem* xE = new XElem(d2, mFetches);
 
-		if (yE == NULL)
+		if (yE == NULL || d1 != yE->delta)
 		{
 			yE = new YElem(d1);
-			elements.push_back(yE);//TODO: dont push back, insert at correct position.
+			insert(elements, yE);
 		}
-
-		yE->elements.push_back(xE);//TODO: again with the push back.
-
-		elemCount++;
+		if (insert(yE->elements, xE))
+			elemCount++;
 		//cout << "new combo: " << d1 << ", " << d2 << endl;
 		return xE;
 	}
+	cout << "ELEMCOUNT TOO HIGH: " << elemCount << endl;
 	return NULL;
 }
 
@@ -200,22 +387,26 @@ ElemManager* manager;
 
 void prefetch_access(AccessStat stat)
 {
-	int nextFetch =  manager->findNextFetch((int)stat.mem_addr);
+	int nextFetch = manager->findNextFetch((int)stat.mem_addr);
 	
 	if (stat.miss)
-		cout << "miss: " << stat.mem_addr << endl;
+		cout << "miss:  " << stat.mem_addr << "\t" << stat.time << endl;
 	else
-		cout << "hit:  " << stat.mem_addr << endl;
+		cout << "hit:   " << stat.mem_addr << endl;
 	
-	if(nextFetch < MAX_PHYS_MEM_ADDR && !in_cache((uint64_t)nextFetch) && nextFetch != stat.mem_addr)
+	if(nextFetch < MAX_PHYS_MEM_ADDR && !in_cache((uint64_t)nextFetch) && nextFetch != stat.mem_addr && current_queue_size() < MAX_QUEUE_SIZE)
 	{
-		cout << "Fetch: " << nextFetch << endl;
+		set_prefetch_bit(nextFetch);
+		cout << "Fetch: " << nextFetch << "\t" << stat.time << endl;
 	  	issue_prefetch((uint64_t)nextFetch);
+	  	for (deque<YElem*>::iterator it = manager->elements.begin(); it != manager->elements.end(); it++)
+	  		cout << "\t\td: " << (*it)->delta << endl;
   	}
 }
 
 void prefetch_complete(Addr addr)
 {
+	cout << "-----------------------Fetched " << addr << endl;
 }
 
 void prefetch_init(void)

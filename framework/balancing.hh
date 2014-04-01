@@ -10,3 +10,6 @@
 #define KICK_ELEM_THRESHOLD 0
 
 #define MAX_ELEMS 256
+
+
+#define LOOK_AHEAD_COUNT 2
