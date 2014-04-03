@@ -1,4 +1,33 @@
-\section*{Simulator}
+To evaluate the prefetcher we used the given framework which contained a modified version of the M5 open source hardware simulator system. This system uses a selected set of the SPEC CPU2000 bencmarks to evaluate the prefetchers performance. The specific benchmarks which were executed are given in table \ref{table:results} in the results section. The benchmarks in this table are selected from both the integer and the floating point components of the CPU2000 benchmark, which generate the data to be compared to a set of reference prefetchers. 
+
+In the framework there is also a python script included which decides the arguments and parameters for the simulation. These predefined arguments are given in table \ref{table:cmdlineopt}.
+
+\begin{table}[!t]
+\renewcommand{\arraystretch}{1.3}
+\caption{Python script command line options}
+\label{table:cmdlineopt}
+\centering
+\begin{tabular}{l l}
+\bfseries Option & \bfseries Description\\
+\hline
+-\--detailed & Detailed timing simulation\\
+-\--caches & Use caches\\
+-\--l2cache & Use level two cache\\
+-\--l2size=1MB & Level two cache size\\
+-\--prefetcher=policy=proxy & Use the C-style prefetcher interface\\
+-\--prefetcher=on\_access=True & Have the cache notify the prefetcher on \emph{all} accesses,\\& both hits and misses\\
+\hline
+\end{tabular}
+\end{table}
+
+The architecture M5 is simulating is loosely based on the Alpha 21264 microprosessor from the DEC Alpha Tsunami system, which is a superscalar out-of-order CPU. The L1 prefetcher is split in a 32kB instruction cache and a 64kB data cache. Each cache block 
+
+
+We also had access to a HPC cluster called "Kongull" on which we could compile the M5 simulator and run the simulations. To increase the efficiency we installed the M5 system on all of our accounts on the cluster and on a personal computer. This enabled us to run several tests concurrently as well as running shorter tests 
+
+to enable us to run several simulations concurrently. The personal computer 
+
 The framework provided with the assignment was used for simulation. Our code was at first uploaded to the Kongull cluster, but this took a lot of time due to long queue times. The framework was therefore installed on one of our computers, running on Linux CentOS. This worked fine, but most of our other computers couldn't run the simulator because the GCC/G++ versions were too new. 
 
 The simulator used was the modified M5 simulator provided with the assignment. 
+

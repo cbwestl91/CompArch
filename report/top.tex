@@ -1368,13 +1368,18 @@ Appendix two text goes here.
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
-\bibitem{reference:jahre}
-M.~Grannaes, M.~Jahre and L.~Natvig \emph{Storage Efficient Hardware Prefetching using Delta-Correlating Prediction Tables},\hskip 1em plus
-  0.5em minus 0.4em\relax Journal of Instruction-Level Parallelism 13 (2011) 1-16
+\bibitem{reference:jahre} M.~Grannaes, M.~Jahre and L.~Natvig \emph{Storage Efficient Hardware Prefetching using Delta-Correlating Prediction Tables},
+\hskip 1em plus 0.5em minus 0.4em\relax Journal of Instruction-Level Parallelism 13 (2011) 1-16
+
+\bibitem{reference:opg} \emph{M5 simulator system TDT4260 Computer Architecture User documentation},
+\hskip 1em plus 0.5em minus 0.4em\relax Assignment text
+
+\bibitem{reference:spec} SPEC, "SPEC CPU2000 Benchmark Descriptions", 2007
 
 \end{thebibliography}
+
 
 % biography section
 % 
@@ -1384,7 +1389,8 @@ M.~Grannaes, M.~Jahre and L.~Natvig \emph{Storage Efficient Hardware Prefetching
 % \includegraphics command within an optional argument. (You could create
 % your own custom macro containing the \includegraphics command to make things
 % simpler here.)
-%\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
+
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
 % or if you just want to reserve a space for a photo:
 
 %\begin{IEEEbiography}{Michael Shell}
