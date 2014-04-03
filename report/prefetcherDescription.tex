@@ -1,5 +1,26 @@
-The prefetcher has a pattern-seeking behaviour. It uses vectors to log observed fetch sequences, and ranks them based on how often the actual fetches correspond with the predicted sequences. This is achieved by logging combinations of three requests, thus making a link between two fetches and what we expect to be referenced after these. Every time the two requests are recognized, the third one is prefetched. If this is correct behaviour, the score of that particular sequence is raised. The next fetch is then always assumed to be the third fetch in the sequence that has been correct the most times.
+
+%TROND:
+
+The prefetcher is an attempt to improve the Delta-Correlating Prediction Tables (DCPT) approach by Granaes, Jahre and Natvig. The original DCPT algorithm is described in the "Background" section. The main weakness of this approach is (arguably) that it only bases the prefetch address on the first similar delta pattern it finds. This makes the prefetcher extremely vulnerable to alternating patterns and irregularities in general. If the access pattern makes a sudden leap in an otherwise regular pattern, not only will the prefetcher miss the irregular access, it is guaranteed to miss the next access after that when the pattern goes back to normal. This example is illustrated in Table \ref{table:breakDCPT}. Access number 6 breaks the pattern, and misses. Because the next fetch is based on access 6's delta, this also misses. This problem could be solved by a more democratic approach, where the most common "next delta" is used instead of the previous.
+\begin{table}
+\label{table:breakDCPT}
+\begin{tabular}{rrrrl}
+Access & Address & Delta & Fetch issued & Previous result\\
+1 & ... & ... & ... & ...\\
+2 & 1000 & 10 & 1010 & Hit\\
+3 & 1010 & 10 & 1020 & Hit\\
+4 & 1020 & 10 & 1030 & Hit\\
+5 & 1030 & 10 & 1040 & Hit\\
+6 & 1050 & 20 & 1070 & Miss\\
+7 & 1060 & 10 & - 	 & Miss\\
+8 & 1070 & 10 & 1080 & -\\
+9 & 1080 & 10 & 1090 & Hit
+\end{tabular}
+\end{table}
+
+This democratic approach is what the prefetcher described in this report is meant to implement. To achieve this, the structure of the reference table needs a major change. 
+
+The prefetcher uses vectors to log observed fetch sequences, and ranks them based on how often the actual fetches correspond with the predicted sequences. This is achieved by logging combinations of three requests, thus making a link between two fetches and what we expect to be referenced after these. Every time the two requests are recognized, the third one is prefetched. If this is correct behaviour, the score of that particular sequence is raised. The next fetch is then always assumed to be the third fetch in the sequence that has been correct the most times.
 
 The access sequences that occur the least frequent are more prone to being removed in favour of new sequences. This is done by continually raising a threshold. Sequences that are recognized and proven to be correct have their value increased. If entries fall under the threshold, they are removed when the cache is full and space is needed.
-
 
