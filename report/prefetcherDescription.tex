@@ -2,9 +2,14 @@
 %TROND:
 
 The prefetcher is an attempt to improve the Delta-Correlating Prediction Tables (DCPT) approach by Granaes, Jahre and Natvig. The original DCPT algorithm is described in the "Background" section. The main weakness of this approach is (arguably) that it only bases the prefetch address on the first similar delta pattern it finds. This makes the prefetcher extremely vulnerable to alternating patterns and irregularities in general. If the access pattern makes a sudden leap in an otherwise regular pattern, not only will the prefetcher miss the irregular access, it is guaranteed to miss the next access after that when the pattern goes back to normal. This example is illustrated in Table \ref{table:breakDCPT}. Access number 6 breaks the pattern, and misses. Because the next fetch is based on access 6's delta, this also misses. This problem could be solved by a more democratic approach, where the most common "next delta" is used instead of the previous.
-\begin{table}
+\begin{table}[!t]
+\renewcommand{\arraystretch}{1.3}
+\caption{}
 \label{table:breakDCPT}
+\centering
 \begin{tabular}{rrrrl}
+\hline
+
 Access & Address & Delta & Fetch issued & Previous result\\
 1 & ... & ... & ... & ...\\
 2 & 1000 & 10 & 1010 & Hit\\
