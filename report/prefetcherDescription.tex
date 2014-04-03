@@ -32,4 +32,45 @@ The preferred delta leap on fetch N is determined by delta(N - 1) and delta(N - 
 
 To accomodate to an 8kB memory cap, an upper element count threshold is applied. When the count exceeds this limit, the combination with the lowest score is removed from the structure, and replaced by a new element. This only applies if the lowest score is below a given kick threshold. This is to avoid altering a strong set of elements. In addition to the hit/miss scoring, all elements get deducted one point per memory access, meaning that old, unused combinations are more likely to be abandoned than fresh entries.
 
+The entire algorithm is described in pseudo code in Algorithm \ref{alg:lol}. \\\\
+\begin{algorithm}
+\caption{The prefetch\_access(addr) implementation}
+\label{alg:lol}
+\begin{algorithmic}
+\STATE static $delta[]$
+\STATE static $total\_fetches \gets 0$
+\STATE $delta \gets addr - prev\_addr$
+\STATE
+\STATE $//apply$ $previous$ $result:$
+\STATE Elem $elem \gets$ find\_elem($delta[prev]$, $delta[prev - 1]$)
+\IF{$elem$ == $NULL$} 
+\STATE{$elem \gets$ add\_combination($delta[prev]$, $delta[prev - 1]$)}
+\ENDIF
+\IF{$delta$ == $elem$.$delta$}
+\IF{$elem$.$score$ \textless $ total\_fetches$ + $BASE\_SCORE$}
+\STATE{$elem$.$score += total\_fetches$ + $BASE\_SCORE$}
+\ELSE
+\STATE{$elem$.$score += HIT\_SCORE\_BOOST$}
+\ENDIF
+\ELSE
+\STATE{$//check$ $whether$ $to$ $change$ $elem$.$delta$}
+\IF{$elem$.$score$ \textless $ (SCORE\_KICK\_THRSLD$ + $total\_fetches)$}
+\STATE{$elem$.$delta \gets$ $delta$}
+\STATE{$elem$.$score \gets$ $BASE\_SCORE$ + $total\_fetches$}
+\ELSE
+\STATE{$elem$.$score -=$ $MISS\_SCORE\_PUNISHMENT$}
+\ENDIF
+\ENDIF
+\STATE
+\STATE $//find$ $next$ $delta:$
+\STATE Addr $next\_fetch \gets$ get\_delta($delta[prev]$, $delta$)
+\STATE issue\_prefetch($next\_fetch$)
+\STATE
+\STATE $//prep$ $for$ $next$ $run$
+\STATE $delta[last - 1] \gets delta[last]$
+\STATE $delta[last] \gets delta$
+\STATE $total\_fetches++$
+\end{algorithmic}
+\end{algorithm}
+
 
