@@ -1,6 +1,6 @@
 \begin{table}[!t]
 \renewcommand{\arraystretch}{1.3}
-\caption{}
+\caption{Results from prefetcher run on the Kongull Cluster}
 \label{table:results}
 \centering
 \begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -24,3 +24,6 @@ wupwise 	& 1.059 & 0.791 & 0.343 & 0.187 & 279083   & 236426\\
 \end{tabular}
 \end{table}
 
+As seen in table \ref{table:results}, the prefetcher does not perform as well as anticipated. Some tests provide better speedup than others, but the average speedup is only $1%$. There is huge variation between the different tests, with several of the tests reporting a speed decrease. 
+
+Compared to different runs of the same algorithm on the Kongull Cluster, the algorithm's speedup in the various tests remained relatively constant. 
