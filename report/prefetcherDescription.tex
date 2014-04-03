@@ -7,8 +7,12 @@ The prefetcher is an attempt to improve the Delta-Correlating Prediction Tables 
 \caption{}
 \label{table:breakDCPT}
 \centering
-\begin{tabular}{rrrrl}
-Access & Address & Delta & Fetch issued & Previous result\\
+\begin{tabular}{|r|r|r|r|l|}
+\hline
+\bfseries Access & \bfseries Address & \bfseries Delta & \bfseries Fetch~Issued & \bfseries Previous~Result\\
+\hline
+\hline
+%Access & Address & Delta & Fetch issued & Previous result\\
 1 & ... & ... & ... & ...\\
 2 & 1000 & 10 & 1010 & Hit\\
 3 & 1010 & 10 & 1020 & Hit\\
@@ -17,7 +21,8 @@ Access & Address & Delta & Fetch issued & Previous result\\
 6 & 1050 & 20 & 1070 & Miss\\
 7 & 1060 & 10 & - 	 & Miss\\
 8 & 1070 & 10 & 1080 & -\\
-9 & 1080 & 10 & 1090 & Hit
+9 & 1080 & 10 & 1090 & Hit\\
+\hline
 \end{tabular}
 \end{table}
 
