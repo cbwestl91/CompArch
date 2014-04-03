@@ -1,6 +1,4 @@
-#include "elem.hh"
 #include "interface.hh"
-#include "balancing.hh"
 #include <time.h>
 #include <limits>
 #include <algorithm>
@@ -9,8 +7,109 @@
 #include <deque>
 
 using namespace std;
+
 #define OPTIMIZE 1
+#define MULTIFETCH 1
 #define OLD_SCHOOL 1
+
+#define START_SCORE 10000
+#define KICK_THRESHOLD 0
+#define HIT_SCORE_BOOST 500
+#define MISS_SCORE_PUNISHMENT 2000
+#define KICK_ELEM_THRESHOLD 0
+
+#define MAX_ELEMS 800
+
+
+#define LOOK_AHEAD_COUNT 2
+
+
+class Elem 
+{
+public:
+	int delta;
+};
+
+
+//search algorithm
+
+
+class XElem: public Elem
+{
+public:
+	
+	inline int getNext() { return candidate; };
+	
+	XElem(int delta, unsigned int totalFetches) 
+	{ 
+		this->delta = delta; 
+		candidate = 0;
+		score = totalFetches + START_SCORE;
+	}
+	/**
+	* apply actual result, and update score. Change candidate if score == 0
+	*/
+	void applyActualResult(int d3, unsigned int totalFetches);
+	
+	uint8_t getScore() { return score; }
+private:
+	int candidate;
+	uint8_t score;
+};
+
+
+class YElem : public Elem
+{
+public:
+	YElem(int d) 
+	{ 
+		delta = d; 
+	}
+	std::deque<XElem*> elements;
+};
+
+
+class ElemManager
+{
+public:
+	/**
+	tell the element the actual delta it got
+	*/
+	void previousActualCandidate(int d3);
+
+	/**
+	return 0 if not found, and add combination if more room
+	*/
+	int getDelta(int d1, int d2);
+	
+	ElemManager();
+	
+	unsigned int findNextFetch(unsigned int address);
+	
+
+	
+	/**
+	used by getDelta to add new combo
+	*/
+	XElem* addCombination(int d1, int d2);
+	
+
+	uint16_t elemCount;
+	std::deque<YElem*> elements;
+
+private:
+	unsigned int mFetches;
+};
+
+//helpers:
+int findElem(std::deque<XElem*>&, int);
+int findElem(std::deque<YElem*>&, int);
+XElem* findPtr(std::deque<XElem*>& v, int delta);
+YElem* findPtr(std::deque<YElem*>& v, int delta);
+
+/********************************************************************************************
+	START OF ELEM.CC
+********************************************************************************************/
 
 void insert(deque<XElem*> &vec, XElem* n)
 {
@@ -213,8 +312,7 @@ unsigned int ElemManager::findNextFetch(unsigned int address)
 		previousActualCandidate(address - previous);
 		nextFetchDelta = getDelta(delta, address - previous);	
 	}
-	//if (nextFetchDelta)
-	//	cout << "attempted fetch " << (address + nextFetchDelta) << ", delta: " << nextFetchDelta << endl;
+	
 	delta = address - previous;
 	previous = address;
 			
@@ -257,8 +355,6 @@ XElem* ElemManager::addCombination(int d1, int d2)
 			}
 			elemCount--;
 		}
-		else
-			cout << "retarded remove" << endl;
 				
 				
 	}
@@ -275,13 +371,7 @@ XElem* ElemManager::addCombination(int d1, int d2)
 		XElem* xE = new XElem(d2, mFetches);
 	
 		insert(yE->elements, xE);
-		elemCount++;	
-		/*
-	  	for (deque<YElem*>::iterator it = elements.begin(); it != elements.end(); it++)
-	  		cout << "\t\td: " << (*it)->delta << endl;
-  		cout << "----------------" << endl;
-  		*/
-	
+		elemCount++;		
 	}
 	return NULL;
 }
@@ -292,32 +382,31 @@ ElemManager* manager;
 
 void prefetch_access(AccessStat stat)
 {
-
-	Addr normal_adjusted = stat.mem_addr - (stat.mem_addr % BLOCK_SIZE);
-	Addr nextFetch = (Addr) manager->findNextFetch((int)normal_adjusted);
-	//cout << "offset in block: " << nextFetch % BLOCK_SIZE << endl;
-	/*
+	Addr nextFetch = (Addr) manager->findNextFetch((int)stat.mem_addr);
+/*
 	if (stat.miss)
 		cout << "miss:  " << stat.mem_addr << "\t" << stat.time << endl;
 	else
-	  cout << "Hit on:   " << stat.mem_addr  << "<-------------------------------"  <<endl;
-	*/
-	//cout << "Current queue size: " << current_queue_size() << endl;
-	if(stat.miss && nextFetch < MAX_PHYS_MEM_ADDR && !in_cache(nextFetch) && nextFetch != stat.mem_addr)
+		cout << "hit:   " << stat.mem_addr << endl;
+*/
+	if(nextFetch < MAX_PHYS_MEM_ADDR && !in_cache(nextFetch) && nextFetch != stat.mem_addr)
 	{
 		set_prefetch_bit(nextFetch);
-		//cout << "Fetch: " << (nextFetch) << "\t" << stat.time << endl;
+	  	issue_prefetch(nextFetch);
 		
-		issue_prefetch(nextFetch+BLOCK_SIZE);
-		//cout << "Current queue size after issue_prefetch: " << current_queue_size() << endl;
 		
+#if MULTI_FETCH
+		set_prefetch_bit(nextFetch - BLOCK_SIZE);
+	  	issue_prefetch(nextFetch - BLOCK_SIZE);
+		set_prefetch_bit(nextFetch + BLOCK_SIZE);
+	  	issue_prefetch(nextFetch + BLOCK_SIZE);
+#endif
   	}
-
 }
 
 void prefetch_complete(Addr addr)
 {
-  //cout << "-----------------------Fetched " << addr << endl;
+	//cout << "-----------------------Fetched " << addr << endl;
 }
 
 void prefetch_init(void)

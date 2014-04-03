@@ -79,11 +79,7 @@ public:
 	*/
 	XElem* addCombination(int d1, int d2);
 	
-	int findElem(std::deque<XElem*>, int);
-	int findElem(std::deque<YElem*>, int);
 
-	XElem* findPtr(std::deque<XElem*> v, int delta);
-	YElem* findPtr(std::deque<YElem*> v, int delta);
 	uint16_t elemCount;
 	std::deque<YElem*> elements;
 
@@ -91,4 +87,9 @@ private:
 	unsigned int mFetches;
 };
 
+//helpers:
+int findElem(std::deque<XElem*>&, int);
+int findElem(std::deque<YElem*>&, int);
+XElem* findPtr(std::deque<XElem*>& v, int delta);
+YElem* findPtr(std::deque<YElem*>& v, int delta);
 
