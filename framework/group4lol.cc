@@ -9,6 +9,7 @@
 using namespace std;
 
 #define OPTIMIZE 1
+#define MULTIFETCH 1
 #define OLD_SCHOOL 1
 
 #define START_SCORE 10000
@@ -17,7 +18,7 @@ using namespace std;
 #define MISS_SCORE_PUNISHMENT 2000
 #define KICK_ELEM_THRESHOLD 0
 
-#define MAX_ELEMS 256
+#define MAX_ELEMS 800
 
 
 #define LOOK_AHEAD_COUNT 2
@@ -311,8 +312,7 @@ unsigned int ElemManager::findNextFetch(unsigned int address)
 		previousActualCandidate(address - previous);
 		nextFetchDelta = getDelta(delta, address - previous);	
 	}
-	//if (nextFetchDelta)
-	//	cout << "attempted fetch " << (address + nextFetchDelta) << ", delta: " << nextFetchDelta << endl;
+	
 	delta = address - previous;
 	previous = address;
 			
@@ -327,7 +327,7 @@ XElem* ElemManager::addCombination(int d1, int d2)
 		XElem* xE = NULL;
 		int minScore = std::numeric_limits<int>::max();
 		int saved_j = 0, saved_i = 0;
-		//cout << elements.size() << endl;
+		
 		for (int i = 0; i < elements.size(); i++)
 		{
 			for (int j = 0; j < elements[i]->elements.size(); j++)
@@ -371,13 +371,7 @@ XElem* ElemManager::addCombination(int d1, int d2)
 		XElem* xE = new XElem(d2, mFetches);
 	
 		insert(yE->elements, xE);
-		elemCount++;	
-		/*
-	  	for (deque<YElem*>::iterator it = elements.begin(); it != elements.end(); it++)
-	  		cout << "\t\td: " << (*it)->delta << endl;
-  		cout << "----------------" << endl;
-  		*/
-	
+		elemCount++;		
 	}
 	return NULL;
 }
@@ -398,8 +392,15 @@ void prefetch_access(AccessStat stat)
 	if(nextFetch < MAX_PHYS_MEM_ADDR && !in_cache(nextFetch) && nextFetch != stat.mem_addr)
 	{
 		set_prefetch_bit(nextFetch);
-		//cout << "Fetch: " << nextFetch << "\t" << stat.time << endl;
 	  	issue_prefetch(nextFetch);
+		
+		
+#if MULTI_FETCH
+		set_prefetch_bit(nextFetch - BLOCK_SIZE);
+	  	issue_prefetch(nextFetch - BLOCK_SIZE);
+		set_prefetch_bit(nextFetch + BLOCK_SIZE);
+	  	issue_prefetch(nextFetch + BLOCK_SIZE);
+#endif
   	}
 }
 

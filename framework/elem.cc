@@ -292,34 +292,32 @@ ElemManager* manager;
 
 void prefetch_access(AccessStat stat)
 {
-/*
+
 	Addr normal_adjusted = stat.mem_addr - (stat.mem_addr % BLOCK_SIZE);
 	Addr nextFetch = (Addr) manager->findNextFetch((int)normal_adjusted);
 	//cout << "offset in block: " << nextFetch % BLOCK_SIZE << endl;
-*/
+	/*
 	if (stat.miss)
 		cout << "miss:  " << stat.mem_addr << "\t" << stat.time << endl;
 	else
-		cout << "hit:   " << stat.mem_addr << "\t" << (get_prefetch_bit(stat.mem_addr)? "PF" : "LUCK") << endl;
-/*
+	  cout << "Hit on:   " << stat.mem_addr  << "<-------------------------------"  <<endl;
+	*/
+	//cout << "Current queue size: " << current_queue_size() << endl;
 	if(stat.miss && nextFetch < MAX_PHYS_MEM_ADDR && !in_cache(nextFetch) && nextFetch != stat.mem_addr)
 	{
 		set_prefetch_bit(nextFetch);
-		cout << "Fetch: " << nextFetch << "\t" << stat.time << endl;
-	  	issue_prefetch(nextFetch);
+		//cout << "Fetch: " << (nextFetch) << "\t" << stat.time << endl;
+		
+		issue_prefetch(nextFetch+BLOCK_SIZE);
+		//cout << "Current queue size after issue_prefetch: " << current_queue_size() << endl;
+		
   	}
-*/
-  	Addr pf_addr = stat.mem_addr + BLOCK_SIZE;
 
-
-    if (stat.miss && !in_cache(pf_addr)) {
-        issue_prefetch(pf_addr);
-    }
 }
 
 void prefetch_complete(Addr addr)
 {
-	//cout << "-----------------------Fetched " << addr << endl;
+  //cout << "-----------------------Fetched " << addr << endl;
 }
 
 void prefetch_init(void)
