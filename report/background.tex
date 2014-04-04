@@ -2,10 +2,14 @@ During the last 30 years the CPU has evolved tremendously, increasing the instru
 
 The invention of the virtual memory space allowed a memory hierarchy system to be implemented. This way, large, inexpensive, slow memory like RAM can be combined with small, fast, expensive memory onchip memory. The desired memory is "cached" in the onchip memory in blocks, and the process can be accelerated significantly by only having to access onchip memory instead of RAM. If memory that is to be referenced together has addresses that are close in virtual memory, the probablity of it already being cached increases. The probability of a cache hit depends heavily on cache size and the size of the memory block that is cached each time the memory manager needs to access the RAM. In addition to the onchip and offchip memory split, it is common to have both two and three levels of data cache on chip, with L1 cache being the highest level, lying closest to the processing core, often local to the core it services. While this makes the performance a lot better than with off chip memory alone, it doesn't do much for the cases where the memory address isn't cached. The processor is still waiting for accesses, and the limited size of the cache (the aforementioned Intel i7-processor features a 15MB L3 cache, which puts it at the top of the desktop-game). 
 
-In an effort to reduce the wait associated with memory access on the offchip memory, the prefetcher attempts to determine the address of the memory that is to be accessed before it's actually needed. The prefetcher was first introduced on the Intel 8086, and monitors cache misses, attempting to detect access patterns in the form of indepentent, interweaved streams of addresses \cite{reference:8086}. A perfect prefetcher would assure that the processor always had the desired memory in cache at the right time, but as the physical and memory address space the prefetcher is granted has to be minimal for it to have any benefit at all, the success is equally limited. 
+In an effort to reduce the wait associated with memory access on the offchip memory, the prefetcher attempts to determine the address of the memory that is to be accessed before it's actually needed. The prefetcher was first introduced on the Intel 8086, and monitors cache misses, attempting to detect access patterns in the form of indepentent, interweaved streams of addresses \cite{reference:8086}. A perfect prefetcher would assure that the processor always had the desired memory in cache at the right time, but as the memory address space granted to the prefetcher has to be minimal for it to have any benefit at all, the success is equally limited. 
+
+
+
 \\
 \begin{figure}[h!]
 	\includegraphics[width=3.5in]{graphics/CPUmemoryGap.jpg}
-	\caption{Dette er ei tekning}
+	\caption{CPU/memory speed gap illustrated}
+	\label{graph:cpugap}
 \end{figure}
 \\
