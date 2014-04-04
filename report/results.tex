@@ -28,13 +28,13 @@ wupwise 	& 1.059 & 0.791 & 0.343 & 0.187 & 279083   & 236426\\
 
 As seen in table \ref{table:results}, the prefetcher does not provide a significant speedup. Some benchmarks provide better speedup than others, but the average speedup is only 1\%. There are some rather noteworthy variations regarding how the prefetcher performs on the different benchmarks, with some even reporting a decrease in speedup. These variations will be discussed further in the following section.
 
-Some minor changes was also performed on the weighting in the scoring system, but the algorithm's speedup in the various tests remained relatively constant with negligible differences in the 0.1\% range.
+Some minor changes were also performed on the weighting in the scoring system, but the algorithm's speedup in the various tests remained relatively constant with negligible differences in the 0.1\% range.
 
 The results in table \ref{table:results} adhere to the project guideline of keeping cache size under 8 Kb. Due to the strict limit this imposes on the prefetcher compared to the size of the address space, results from a run without these limits are included in table \ref{table:results2} for comparison.
 As can be seen the results are fairly similar and provided an average speedup of 1.5\%. This is still low, but an increase from the implementation when the limit was imposed. As mentioned above, these results are only included for comparison.
 Common and noteworthy for both of these results are that the prefetcher performs rather poor on the benchmarks that have long series of sequencial fetches. This will be further discussed in the next section.
 
-An attempt to do special treatment of the reoccurring scenario linear access was implemented, but the results were neglishable. This suggests that the algorithm works well in these situations, and the attempt was scrapped early on, as it added complexity without any real pay-out.
+An attempt to do special treatment of the reoccurring scenario linear access was implemented, but the improvements were negligible. This suggests that the algorithm works well in these situations, and the attempt was scrapped early on, as it added complexity without any real pay-off.
 
 
 \begin{table*}[!t]
