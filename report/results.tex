@@ -1,3 +1,5 @@
+
+
 \begin{table}[!t]
 \renewcommand{\arraystretch}{1.3}
 \caption{Prefetcher results from the Kongull Cluster}
@@ -26,7 +28,7 @@ wupwise 	& 1.059 & 0.791 & 0.343 & 0.187 & 279083   & 236426\\
 
 As seen in table \ref{table:results}, the prefetcher does not provide a significant speedup. Some tests provide better speedup than others, but the average speedup is only 1\%. There is huge variation between the different tests, with some of the tests even reporting a speed decrease. The prefetcher was initially run on a Linux CentOS, but the results differed greatly from the Kongull Cluster results. Kongull's output was consistent while the other simulator's output varied a lot. Therefore it seemed that Kongull was the most correct simulator
 
-Compared to different runs of the same algorithm on the Kongull Cluster, the algorithm's speedup in the various tests remain relatively constant with some being better and some slightly worse. Especially the benchmarks that use a lot of incrementation suffer bad results. The prefetcher is not able to cache something before it has seen it. If all requests are unique, prefetches will never occur.
+Compared to different runs of the same algorithm on the Kongull Cluster, the algorithm's speedup in the various tests remain relatively constant with some being better and some slightly worse. Especially the benchmarks that use a lot of incrementation suffer bad results. 
 
 The results above adhere to the project guideline of keeping cache size under 8 Kb. Due to the strict limit this imposes on the prefetcher compared to the size of the address space, results from a run without these limits are included in table \ref{table:results2} for comparison.
 
