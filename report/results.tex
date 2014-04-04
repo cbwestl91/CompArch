@@ -34,6 +34,7 @@ The results in table \ref{table:results} adhere to the project guideline of keep
 As can be seen the results are fairly similar and provided an average speedup of 1.5\%. This is still low, but an increase from the implementation when the limit was imposed. As mentioned above, these results are only included for comparison.
 Common and noteworthy for both of these results are that the prefetcher performs rather poor on the benchmarks that have long series of sequencial fetches. This will be further discussed in the next section.
 
+An attempt to do special treatment of the reoccurring scenario linear access was implemented, but the results were neglishable. This suggests that the algorithm works well in these situations, and the attempt was scrapped early on, as it added complexity without any real pay-out.
 
 
 \begin{table*}[!t]
