@@ -65,7 +65,9 @@ The entire algorithm is described in pseudo code in Algorithm \ref{alg:lol}. \\\
 \STATE
 \STATE $//find$ $next$ $delta:$
 \STATE Addr $next\_fetch \gets$ get\_delta($delta[prev]$, $delta$)
+\IF{is\_valid($next\_fetch$) \AND \NOT in\_cache($next\_fetch$)}
 \STATE issue\_prefetch($next\_fetch$)
+\ENDIF
 \STATE
 \STATE $//prep$ $for$ $next$ $run$
 \STATE $delta[last - 1] \gets delta[last]$
