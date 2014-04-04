@@ -1,2 +1,12 @@
-The prefetcher did not result in any significant speed increase. It seemed like a good algorithm until it was tested. Seeing how many prefetches are done in any of the tests, it became obvious that attempting to log all patterns seen in such a big address space simply introduced complexity.
+The prefetcher did not result in any significant speed increase. It seemed like a good algorithm until it was tested. Seeing how many prefetches were done in each tests, it became obvious that attempting to log all patterns seen in such a big address space simply introduced complexity. There are extremely many address combinations, reducing the chance that the same patterns are visited multiple times. While the sequences probably will be visited again in the future, many others will take up a lot of the time, rendering the speedup negligible. The use of spatial and temporal locality therefore seems superior, both in terms of simplicity and result.
 
+Table REFERER HER! shows an attempt to increase the speedup. It was thought that increasing the cache size would cause many more combinations to be stored, and thus avoid having sequences deleted before they were used due to the massive amount of possible sequences. The lack of speed increase shows that the algorithm was in the wrong from the beginning, and tries to predict too much. It assumes that things happen periodically, something there is no guarantee for in the benchmark tests.
+
+%  Why no speed increase
+% Attempts to increase speed. How and why
+% Comment each test
+% Compare with no-limit results
+% Compare with DCPT
+%
+%
+%
